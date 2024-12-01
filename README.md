@@ -51,8 +51,8 @@ The frontend consists of a browser extension.
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-repo-url/spam-email-classifier.git
-   cd spam-email-classifier/backend
+   git clone https://github.com/dipeshkumar123/Email-Spam-Detection-Chrome-Extension.git
+   cd Email-Spam-Detection-Chrome-Extension/backend
    ```
 
 2. **Install Dependencies**:
@@ -79,7 +79,7 @@ The frontend consists of a browser extension.
 
 2. Enable Developer Mode.
 
-3. Click **Load unpacked** and select the `fronted copy` directory.
+3. Click **Load unpacked** and select the `fronted` directory.
 
 4. The extension icon will appear in your browser toolbar.
 
@@ -89,21 +89,21 @@ The frontend consists of a browser extension.
 
 The backend exposes the following endpoints:
 
-- **`POST /classify`**  
+- **`POST /check_spam`**  
   Input: JSON object with the email text.  
   Output: Classification result (Spam/Not Spam).
 
 Example:
 ```json
 {
-  "email": "Congratulations, you've won a free iPhone!"
+  "text": "Congratulations, you've won a free iPhone!"
 }
 ```
 
 Response:
 ```json
 {
-  "classification": "Spam"
+  "spam": "true"
 }
 ```
 
@@ -148,6 +148,6 @@ This project is licensed under the MIT License. See the `LICENSE` file for more 
 ## Contact
 
 For any questions or issues, please contact:
-- **Name**: [Your Name]
-- **Email**: [Your Email]
-- **GitHub**: [Your GitHub Profile URL]
+- **Name**: Dipesh Kumar Panjiyar
+- **Email**: panjiyardipesh123@gmail.com
+- **GitHub**: https://github.com/dipeshkumar123
