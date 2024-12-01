@@ -103,7 +103,7 @@ Example:
 Response:
 ```json
 {
-  "spam": "true"
+  "spam": "false"
 }
 ```
 
