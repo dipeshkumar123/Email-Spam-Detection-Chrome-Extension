@@ -1,35 +1,26 @@
 {
     "manifest_version": 3,
     "name": "Email Spam Detector",
-    "version": "1.0",
-    "description": "Filters emails to detect spam",
+    "version": "1.1",
+    "description": "Detect if an email is spam or not using AI.",
+    "permissions": ["activeTab", "scripting", "storage"],
     "host_permissions": [
-        "https://127.0.0.1:5000/*"
-    ],
-    "permissions": [
-        "activeTab",
-        "storage",
-        "scripting"
+      "http://127.0.0.1:5000/check_spam",
+      "https://mail.google.com/*",
+      "https://outlook.live.com/*"
     ],
     "background": {
-        "service_worker": "background.js"
+      "service_worker": "background.js"
     },
     "action": {
-        "default_popup": "popup.html"
+      "default_popup": "popup.html",
+      "default_icon": "icon.png"
     },
     "content_scripts": [
-        {
-            "matches": [
-                "https://mail.google.com/*"
-            ],
-            "js": [
-                "content.js"
-            ]
-        }
-    ],
-    "icons": {
-        "16": "icon.png",
-        "48": "icon.png",
-        "128": "icon.png"
-    }
-}
+      {
+        "matches": ["https://mail.google.com/*", "https://outlook.live.com/*"],
+        "js": ["content.js"]
+      }
+    ]
+  }
+  
