@@ -1,29 +1,40 @@
-document.getElementById("check-spam").addEventListener("click", async () => {
-    const emailText = document.getElementById("email-text").value.trim();
-    if (!emailText) {
-        document.getElementById("result").textContent = "Please enter the email content!";
-        return;
-    }
-
-    document.getElementById("result").textContent = "Checking... Please wait.";
-
-    try {
-        const response = await fetch('http://127.0.0.1:5000/check_spam', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ text: emailText })
-        });
-
-        if (!response.ok) {
-            throw new Error("Server error: Unable to check spam.");
+document.getElementById("checkSpam").addEventListener("click", () => {
+    // Clear previous results
+    document.getElementById("result").innerText = "Loading...";
+  
+    // Request email content from the active tab
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const activeTab = tabs[0];
+      chrome.tabs.sendMessage(
+        activeTab.id,
+        { action: "getEmailContent" },
+        (response) => {
+          if (response && response.content) {
+            const emailText = response.content;
+  
+            // Call the spam detection API
+            fetch("http://127.0.0.1:5000/check_spam", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ text: emailText })
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                const result = data.spam
+                  ? "This email is SPAM."
+                  : "This email is NOT SPAM.";
+                document.getElementById("result").innerText = result;
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                document.getElementById("result").innerText = "Error checking spam.";
+              });
+          } else {
+            document.getElementById("result").innerText =
+              "Unable to fetch email content.";
+          }
         }
-
-        const result = await response.json();
-        const isSpam = result.spam ? "This email is SPAM!" : "This email is NOT SPAM.";
-        document.getElementById("result").textContent = isSpam;
-    } catch (error) {
-        document.getElementById("result").textContent = `Error: ${error.message}`;
-    }
-});
+      );
+    });
+  });
+  
