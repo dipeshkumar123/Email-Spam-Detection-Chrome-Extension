@@ -1,26 +1,26 @@
-// Function to extract email text from Gmail
-function getEmailText() {
-  const emailBody = document.querySelector(".a3s.aiL"); // Gmail's class for email content
-  return emailBody ? emailBody.innerText : null;
+// Detect email body content on Gmail or Outlook
+function getEmailContent() {
+  let content = "";
+
+  // Gmail-specific scraping
+  if (window.location.href.includes("mail.google.com")) {
+    const emailBody = document.querySelector(".a3s"); // Gmail's email body container
+    if (emailBody) content = emailBody.innerText;
+  }
+
+  // Outlook-specific scraping
+  if (window.location.href.includes("outlook.live.com")) {
+    const emailBody = document.querySelector(".ii.gt"); // Outlook's email body container
+    if (emailBody) content = emailBody.innerText;
+  }
+
+  return content || "Unable to fetch email content. Please open an email.";
 }
 
-// Detect spam when an email page is loaded
-const emailText = getEmailText();
-if (emailText) {
-  fetch('http://127.0.0.1:5000/check_spam', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ text: emailText })
-  })
-  .then(response => response.json())
-  .then(result => {
-      const isSpam = result.spam ? "This email is spam!" : "This email is not spam.";
-      alert(isSpam);  // Optionally use alert to notify user
-  })
-  .catch(error => {
-      console.error('Error checking spam:', error);
-      alert('Error checking spam. Please try again later.');
-  });
-}
+// Send the content back to the popup
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "getEmailContent") {
+    const emailContent = getEmailContent();
+    sendResponse({ content: emailContent });
+  }
+});
